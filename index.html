@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Tuition Fee CRM</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            clay: {
+              canvas: '#EEF3F9',
+              card: '#F4F8FC',
+              accent: '#4F46E5',
+              dark: '#0F172A',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    input, select, textarea {
+      user-select: text;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background: #EEF3F9;
+      color: #0F172A;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Soft Clay Porcelanic Surfaces */
+    .clay-card {
+      background: #EEF3F9;
+      box-shadow: 
+        8px 8px 18px rgba(175, 192, 215, 0.5),
+        -8px -8px 18px rgba(255, 255, 255, 0.95),
+        inset 1px 1px 2px rgba(255, 255, 255, 0.8),
+        inset -1px -1px 2px rgba(175, 192, 215, 0.2);
+      border-radius: 24px;
+    }
+
+    .clay-card-sm {
+      background: #EEF3F9;
+      box-shadow: 
+        5px 5px 12px rgba(175, 192, 215, 0.45),
+        -5px -5px 12px rgba(255, 255, 255, 0.95),
+        inset 1px 1px 1.5px rgba(255, 255, 255, 0.9);
+      border-radius: 16px;
+    }
+
+    /* Debossed Inset Fields */
+    .clay-inset {
+      background: #E6EEF7;
+      box-shadow: 
+        inset 3px 3px 7px rgba(175, 192, 215, 0.55),
+        inset -3px -3px 7px rgba(255, 255, 255, 0.95);
+      border-radius: 14px;
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .clay-inset:focus-within, .clay-inset:focus {
+      box-shadow: 
+        inset 3px 3px 6px rgba(175, 192, 215, 0.4),
+        inset -3px -3px 6px rgba(255, 255, 255, 0.9),
+        0 0 0 2px rgba(79, 70, 229, 0.35);
+    }
+
+    /* Tactile Clickable Clay Buttons */
+    .clay-btn {
+      touch-action: manipulation;
+      cursor: pointer;
+      outline: none;
+      border: none;
+      transition: transform 0.14s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.14s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .clay-btn:active {
+      transform: scale(0.95);
+    }
+
+    .clay-btn-light {
+      background: #EEF3F9;
+      color: #334155;
+      box-shadow: 
+        5px 5px 12px rgba(175, 192, 215, 0.5),
+        -5px -5px 12px rgba(255, 255, 255, 0.95),
+        inset 1px 1px 2px rgba(255, 255, 255, 0.9);
+      border-radius: 14px;
+    }
+    .clay-btn-light:active {
+      box-shadow: 
+        inset 3px 3px 6px rgba(175, 192, 215, 0.6),
+        inset -3px -3px 6px rgba(255, 255, 255, 0.95);
+    }
+
+    .clay-btn-dark {
+      background: linear-gradient(135deg, #1E293B, #0F172A);
+      color: #FFFFFF;
+      box-shadow: 
+        5px 6px 14px rgba(15, 23, 42, 0.28),
+        -3px -3px 8px rgba(255, 255, 255, 0.8),
+        inset 1px 1px 1.5px rgba(255, 255, 255, 0.25);
+      border-radius: 16px;
+    }
+    .clay-btn-dark:active {
+      box-shadow: 
+        inset 2px 2px 5px rgba(0, 0, 0, 0.5),
+        2px 2px 6px rgba(15, 23, 42, 0.2);
+    }
+
+    .clay-btn-primary {
+      background: linear-gradient(135deg, #4F46E5, #4338CA);
+      color: #FFFFFF;
+      box-shadow: 
+        5px 6px 14px rgba(79, 70, 229, 0.35),
+        -3px -3px 8px rgba(255, 255, 255, 0.8),
+        inset 1px 1px 1.5px rgba(255, 255, 255, 0.35);
+      border-radius: 16px;
+    }
+
+    /* Status Badges */
+    .badge-paid {
+      background: linear-gradient(135deg, #10B981, #059669);
+      color: #FFFFFF;
+      box-shadow: 0 3px 10px rgba(16, 185, 129, 0.35), inset 1px 1px 1px rgba(255, 255, 255, 0.5);
+    }
+
+    @keyframes claySosPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.55), inset 1px 1px 1px rgba(255, 255, 255, 0.4);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 0 0 6px rgba(239, 68, 68, 0), inset 1px 1px 1px rgba(255, 255, 255, 0.4);
+        transform: scale(1.02);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0), inset 1px 1px 1px rgba(255, 255, 255, 0.4);
+        transform: scale(1);
+      }
+    }
+
+    .badge-unpaid {
+      background: linear-gradient(135deg, #EF4444, #DC2626);
+      color: #FFFFFF;
+      animation: claySosPulse 2.2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+    }
+
+    .badge-partial {
+      background: linear-gradient(135deg, #F59E0B, #D97706);
+      color: #FFFFFF;
+      box-shadow: 0 3px 10px rgba(245, 158, 11, 0.3), inset 1px 1px 1px rgba(255, 255, 255, 0.5);
+    }
+
+    .sos-dot {
+      animation: sosBlink 1.2s infinite alternate ease-in-out;
+    }
+    @keyframes sosBlink {
+      from { opacity: 0.35; transform: scale(0.85); }
+      to { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* Modal Backdrop */
+    .clay-backdrop {
+      background: rgba(15, 23, 42, 0.42);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+  </style>
+</head>
+<body class="selection:bg-indigo-600 selection:text-white pb-36">
+
+  <div id="app" class="max-w-md mx-auto px-4 pt-3.5 sm:pt-6">
+
+    <!-- Top Status Bar: Clock + Audio/Backup Tools -->
+    <header class="mb-3.5">
+      <div class="flex items-center justify-between px-1 mb-2.5">
+        
+        <!-- Live Real-Time Digital Clock Pill -->
+        <div class="clay-card-sm px-3.5 py-1.5 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 sos-dot"></span>
+          <span id="liveTime" class="text-xs font-mono font-extrabold tracking-tight text-slate-800">--:--:--</span>
+          <span class="text-slate-300 font-bold">|</span>
+          <span id="liveDate" class="text-[11px] font-bold text-slate-600">-- --- ----</span>
+        </div>
+
+        <!-- Quick Sound / Audio Feedback Toggle & Backup -->
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="toggleAudio()" id="btnAudioToggle" title="Toggle Sound Feedback" class="clay-btn clay-btn-light w-8 h-8 rounded-full text-slate-600 text-xs">
+            🔊
+          </button>
+          <button type="button" onclick="openBackupModal()" title="Export / Import Backup" class="clay-btn clay-btn-light w-8 h-8 rounded-full text-slate-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- App Header & Month Navigator Card -->
+      <div class="clay-card p-4 relative overflow-hidden">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-[10px] font-black uppercase tracking-widest text-indigo-600">Register</span>
+            <h1 class="text-xl font-black text-slate-900 tracking-tight">
+              Tuition Fees
+            </h1>
+          </div>
+
+          <!-- Month Selector Controller -->
+          <div class="clay-card-sm p-1 flex items-center gap-1">
+            <button type="button" onclick="shiftMonth(-1)" class="clay-btn w-7 h-7 rounded-xl text-slate-700 hover:text-indigo-600" title="Previous Month">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
+            </button>
+            
+            <select id="selectedMonthSelect" onchange="handleMonthChange(this.value)" class="bg-transparent font-black text-xs text-slate-900 px-1 py-1 cursor-pointer focus:outline-none text-center">
+              <!-- Dynamically populated -->
+            </select>
+
+            <button type="button" onclick="shiftMonth(1)" class="clay-btn w-7 h-7 rounded-xl text-slate-700 hover:text-indigo-600" title="Next Month">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3-Pill Monthly Summary Tiles -->
+        <div class="grid grid-cols-3 gap-2 mt-3.5 pt-3 border-t border-slate-200/50">
+          <div class="clay-card-sm p-2 text-center">
+            <p class="text-[9px] font-black uppercase tracking-wider text-slate-400">Enrolled</p>
+            <p id="statTotalStudents" class="text-base font-black text-slate-800 mt-0.5">0</p>
+          </div>
+          <div class="clay-card-sm p-2 text-center">
+            <p class="text-[9px] font-black uppercase tracking-wider text-emerald-600">Collected</p>
+            <p id="statCollected" class="text-base font-black text-emerald-600 mt-0.5">₹0</p>
+          </div>
+          <div class="clay-card-sm p-2 text-center">
+            <p class="text-[9px] font-black uppercase tracking-wider text-rose-600 flex items-center justify-center gap-1">
+              <span>Pending</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-rose-500 sos-dot"></span>
+            </p>
+            <p id="statPending" class="text-base font-black text-rose-600 mt-0.5">₹0</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="mainContainer">
+      
+      <!-- TAB 1: FEES ROSTER & LIVE DUES -->
+      <section id="viewFees" class="space-y-3">
+        
+        <!-- Filter Pill Bar -->
+        <div class="clay-card-sm p-1.5 flex gap-1 text-xs font-black">
+          <button type="button" onclick="setFeeFilter('all')" id="btnFilterAll" class="clay-btn flex-1 py-1.5 rounded-xl bg-slate-900 text-white shadow-sm">
+            All (<span id="countAll">0</span>)
+          </button>
+          <button type="button" onclick="setFeeFilter('unpaid')" id="btnFilterUnpaid" class="clay-btn flex-1 py-1.5 rounded-xl text-slate-600 hover:text-rose-600 flex items-center justify-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-rose-500 sos-dot"></span>
+            Unpaid (<span id="countUnpaid">0</span>)
+          </button>
+          <button type="button" onclick="setFeeFilter('paid')" id="btnFilterPaid" class="clay-btn flex-1 py-1.5 rounded-xl text-slate-600 hover:text-emerald-600">
+            Paid (<span id="countPaid">0</span>)
+          </button>
+        </div>
+
+        <!-- Dynamic Context Bar -->
+        <div class="flex items-center justify-between px-2 text-xs">
+          <div class="font-extrabold text-slate-700 flex items-center gap-1.5">
+            <span class="text-slate-500">Status for:</span>
+            <span id="activeMonthDisplay" class="clay-card-sm text-indigo-700 px-2.5 py-0.5 rounded-lg font-mono text-[11px] font-black"></span>
+          </div>
+          <span class="text-slate-400 font-bold text-[11px]" id="filterSummaryText"></span>
+        </div>
+
+        <!-- Student Cards List -->
+        <div id="feeCardsList" class="space-y-2.5">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Payments Feed for Active Month -->
+        <div class="pt-2">
+          <div class="flex items-center justify-between px-2 mb-2">
+            <h3 class="text-xs font-black uppercase tracking-wider text-slate-500">
+              Payments Received for Month
+            </h3>
+            <span id="recentPaymentsCount" class="text-[11px] font-bold text-slate-400 font-mono">0 entries</span>
+          </div>
+          <div id="recentPaymentsList" class="space-y-2">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: STUDENTS REGISTRY -->
+      <section id="viewStudents" class="hidden space-y-3">
+        <div class="flex gap-2">
+          <div class="relative flex-1">
+            <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
+            <input
+              type="text"
+              id="studentSearchInput"
+              oninput="handleStudentSearch(this.value)"
+              placeholder="Search student name or class..."
+              class="clay-inset w-full pl-10 pr-3 py-2.5 text-xs font-bold text-slate-900 placeholder:text-slate-400 focus:outline-none"
+            />
+          </div>
+          <button type="button" onclick="openAddStudentModal()" class="clay-btn clay-btn-dark px-4 py-2.5 rounded-2xl text-xs font-black flex items-center gap-1.5 shadow-sm">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+            <span>Register</span>
+          </button>
+        </div>
+
+        <div id="studentsRosterList" class="space-y-2.5">
+          <!-- Populated by JavaScript -->
+        </div>
+      </section>
+
+      <!-- TAB 3: FULL PAYMENT LEDGER -->
+      <section id="viewHistory" class="hidden space-y-3">
+        <div class="flex items-center justify-between px-2">
+          <span class="text-xs font-black uppercase tracking-wider text-slate-500">
+            Complete Payment Ledger
+          </span>
+          <span id="allPaymentsCount" class="text-[11px] font-mono font-black clay-card-sm text-slate-800 px-2.5 py-0.5 rounded-lg">0 total</span>
+        </div>
+
+        <div id="allPaymentsLedger" class="space-y-2">
+          <!-- Populated by JavaScript -->
+        </div>
+      </section>
+
+      <!-- TAB 4: STUDENT DETAIL DRILL-DOWN -->
+      <section id="viewStudentDetail" class="hidden space-y-3">
+        <button type="button" onclick="closeStudentDetail()" class="clay-btn clay-btn-light inline-flex items-center gap-1.5 text-xs font-extrabold text-slate-700 px-3.5 py-1.5 rounded-xl">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
+          Back
+        </button>
+
+        <div id="detailStudentCard" class="clay-card p-4 space-y-3">
+          <!-- Dynamic -->
+        </div>
+
+        <div>
+          <h4 class="text-xs font-black uppercase tracking-wider text-slate-500 px-2 mb-2">
+            Payment History for Student
+          </h4>
+          <div id="detailPaymentHistoryList" class="space-y-2">
+            <!-- Dynamic -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 z-40 px-4 py-3 bg-gradient-to-t from-[#EEF3F9] via-[#EEF3F9]/95 to-transparent">
+      <div class="max-w-md mx-auto clay-card px-4 py-2 flex items-center justify-around shadow-2xl">
+        
+        <!-- Fees Tab -->
+        <button type="button" onclick="switchTab('fees')" id="tabFeesBtn" class="clay-btn flex flex-col items-center justify-center p-2 rounded-2xl text-slate-900 font-black">
+          <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
+          </svg>
+          <span class="text-[10px]">Fees</span>
+        </button>
+
+        <!-- Big Raised + Payment Button -->
+        <button type="button" onclick="openPaymentModal()" class="clay-btn clay-btn-dark -top-3.5 relative px-5 py-2.5 rounded-full flex items-center gap-1.5 shadow-xl border-2 border-white/70">
+          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          <span class="text-xs font-black tracking-tight">Payment</span>
+        </button>
+
+        <!-- Students Tab -->
+        <button type="button" onclick="switchTab('students')" id="tabStudentsBtn" class="clay-btn flex flex-col items-center justify-center p-2 rounded-2xl text-slate-400 font-bold hover:text-slate-700">
+          <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+          </svg>
+          <span class="text-[10px]">Students</span>
+        </button>
+
+        <!-- History Tab -->
+        <button type="button" onclick="switchTab('history')" id="tabHistoryBtn" class="clay-btn flex flex-col items-center justify-center p-2 rounded-2xl text-slate-400 font-bold hover:text-slate-700">
+          <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span class="text-[10px]">Ledger</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- MODAL 1: RECORD / EDIT PAYMENT -->
+    <div id="paymentModal" onclick="if(event.target === this) closePaymentModal()" class="fixed inset-0 z-50 clay-backdrop flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
+      <div class="clay-card w-full sm:max-w-md rounded-t-[28px] sm:rounded-[28px] p-5 shadow-2xl">
+        
+        <div class="flex items-center justify-between pb-2.5 border-b border-slate-200/60">
+          <div>
+            <h3 id="paymentModalTitle" class="text-base font-black text-slate-900">Record Fee Payment</h3>
+            <p class="text-[11px] font-bold text-slate-400">Quick 10-second payment logging</p>
+          </div>
+          <button type="button" onclick="closePaymentModal()" class="clay-btn clay-btn-light w-8 h-8 rounded-full text-slate-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+
+        <form id="paymentForm" onsubmit="handlePaymentSubmit(event)" class="mt-3.5 space-y-3">
+          <input type="hidden" id="editPaymentId" value="" />
+
+          <!-- Student Dropdown -->
+          <div>
+            <label class="block text-[11px] font-black text-slate-700 mb-1">Select Student *</label>
+            <select id="pStudentSelect" onchange="onStudentSelectForPayment(this.value)" required class="clay-inset w-full px-3.5 py-2.5 text-xs font-black text-slate-900 focus:outline-none">
+              <option value="">-- Choose Student --</option>
+            </select>
+          </div>
+
+          <!-- Month Selector with Quick Pills -->
+          <div>
+            <label class="block text-[11px] font-black text-slate-700 mb-1">Fee for Month *</label>
+            
+            <div class="grid grid-cols-3 gap-1.5 mb-2">
+              <button type="button" onclick="setQuickPaymentMonth('current')" id="btnQuickCurrent" class="clay-btn clay-btn-light py-1.5 px-2 text-[11px] font-black rounded-xl text-center">
+                This Month
+              </button>
+              <button type="button" onclick="setQuickPaymentMonth('last')" id="btnQuickLast" class="clay-btn clay-btn-light py-1.5 px-2 text-[11px] font-black rounded-xl text-center">
+                Last Month
+              </button>
+              <button type="button" onclick="toggleCustomMonthInput(true)" id="btnQuickCustom" class="clay-btn clay-btn-light py-1.5 px-2 text-[11px] font-black rounded-xl text-center">
+                Custom
+              </button>
+            </div>
+
+            <!-- Standard Dropdown -->
+            <div id="standardMonthContainer">
+              <select id="pMonthSelect" class="clay-inset w-full px-3.5 py-2 text-xs font-black text-slate-900 focus:outline-none">
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+
+            <!-- Custom Month Input -->
+            <div id="customMonthContainer" class="hidden mt-1.5">
+              <div class="flex gap-2">
+                <input type="text" id="pCustomMonthInput" placeholder="e.g. Sep 2026 or Special Session" class="clay-inset flex-1 px-3.5 py-2 text-xs font-black text-slate-900 focus:outline-none" />
+                <button type="button" onclick="toggleCustomMonthInput(false)" class="clay-btn clay-btn-light text-[11px] px-3 font-black rounded-xl">Back</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Amount -->
+          <div>
+            <label class="block text-[11px] font-black text-slate-700 mb-1">Amount Paid (₹) *</label>
+            <div class="relative">
+              <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-black text-sm">₹</span>
+              <input type="number" id="pAmountInput" min="1" step="1" placeholder="1500" required class="clay-inset w-full pl-8 pr-3.5 py-2 text-sm font-black text-slate-900 focus:outline-none" />
+            </div>
+          </div>
+
+          <!-- Date & Payment Method -->
+          <div class="grid grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-[11px] font-black text-slate-700 mb-1">Date *</label>
+              <input type="date" id="pDateInput" required class="clay-inset w-full px-3 py-2 text-xs font-bold text-slate-900 focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-black text-slate-700 mb-1">Method *</label>
+              <select id="pMethodSelect" class="clay-inset w-full px-3 py-2 text-xs font-bold text-slate-900 focus:outline-none">
+                <option value="Cash">Cash</option>
+                <option value="UPI">UPI</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Save Button -->
+          <div class="pt-2">
+            <button type="submit" class="clay-btn clay-btn-dark w-full py-3 rounded-2xl font-black text-xs flex items-center justify-center gap-2 shadow-lg">
+              <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+              <span id="btnSavePaymentText">Save Payment</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL 2: REGISTER NEW STUDENT -->
+    <div id="addStudentModal" onclick="if(event.target === this) closeAddStudentModal()" class="fixed inset-0 z-50 clay-backdrop flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
+      <div class="clay-card w-full sm:max-w-md rounded-t-[28px] sm:rounded-[28px] p-5 shadow-2xl">
+        
+        <div class="flex items-center justify-between pb-2.5 border-b border-slate-200/60">
+          <div>
+            <h3 class="text-base font-black text-slate-900">Register Student</h3>
+            <p class="text-[11px] font-bold text-slate-400">Save student details & monthly rate</p>
+          </div>
+          <button type="button" onclick="closeAddStudentModal()" class="clay-btn clay-btn-light w-8 h-8 rounded-full text-slate-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+
+        <form id="addStudentForm" onsubmit="handleAddStudentSubmit(event)" class="mt-3.5 space-y-3">
+          <div>
+            <label class="block text-[11px] font-black text-slate-700 mb-1">Student Full Name *</label>
+            <input type="text" id="sNameInput" placeholder="e.g. Aarav Sharma" required class="clay-inset w-full px-3.5 py-2.5 text-xs font-bold text-slate-900 focus:outline-none" />
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-black text-slate-700 mb-1">Class / Standard *</label>
+            <input type="text" id="sClassInput" placeholder="e.g. Class 10" required class="clay-inset w-full px-3.5 py-2.5 text-xs font-bold text-slate-900 focus:outline-none" />
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-black text-slate-700 mb-1">Monthly Fee (₹) *</label>
+            <div class="relative">
+              <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-black text-sm">₹</span>
+              <input type="number" id="sFeeInput" min="1" step="1" placeholder="1500" required class="clay-inset w-full pl-8 pr-3.5 py-2 text-sm font-black text-slate-900 focus:outline-none" />
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" class="clay-btn clay-btn-dark w-full py-3 rounded-2xl font-black text-xs shadow-lg">
+              Register Student
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL 3: DIGITAL FEE RECEIPT (WHATSAPP SHAREABLE) -->
+    <div id="receiptModal" onclick="if(event.target === this) closeReceiptModal()" class="fixed inset-0 z-50 clay-backdrop flex items-center justify-center p-4 hidden">
+      <div class="clay-card w-full max-w-sm rounded-[28px] p-5 shadow-2xl relative">
+        <div class="text-center pb-3 border-b border-dashed border-slate-300">
+          <span class="text-[10px] font-black uppercase tracking-widest text-indigo-600">Official Receipt</span>
+          <h4 class="text-lg font-black text-slate-900">Tuition Fee Slip</h4>
+          <p id="receiptDate" class="text-[10px] font-mono font-bold text-slate-500 mt-0.5">--</p>
+        </div>
+
+        <div class="my-3 space-y-2 text-xs">
+          <div class="flex justify-between">
+            <span class="text-slate-500 font-bold">Student Name:</span>
+            <span id="receiptStudentName" class="font-black text-slate-900">--</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500 font-bold">Class:</span>
+            <span id="receiptClassName" class="font-bold text-slate-800">--</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500 font-bold">Period:</span>
+            <span id="receiptMonth" class="font-black text-indigo-700">--</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500 font-bold">Mode:</span>
+            <span id="receiptMethod" class="font-bold text-slate-800">--</span>
+          </div>
+          <div class="clay-card-sm p-3 flex justify-between items-center mt-2">
+            <span class="text-xs font-black text-slate-700">Amount Received:</span>
+            <span id="receiptAmount" class="text-base font-black text-emerald-600 font-mono">₹0</span>
+          </div>
+        </div>
+
+        <div class="space-y-2 pt-2">
+          <button type="button" onclick="copyReceiptToClipboard()" class="clay-btn clay-btn-dark w-full py-2.5 rounded-xl text-xs font-black flex items-center justify-center gap-1.5">
+            <span>📋 Copy for WhatsApp</span>
+          </button>
+          <button type="button" onclick="closeReceiptModal()" class="clay-btn clay-btn-light w-full py-2 rounded-xl text-xs font-black text-slate-600">
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 4: BACKUP & DATA MANAGEMENT -->
+    <div id="backupModal" onclick="if(event.target === this) closeBackupModal()" class="fixed inset-0 z-50 clay-backdrop flex items-center justify-center p-4 hidden">
+      <div class="clay-card w-full max-w-xs rounded-[28px] p-5 shadow-2xl text-center">
+        <h4 class="text-sm font-black text-slate-900">Data & Backup</h4>
+        <p class="text-[11px] text-slate-500 mt-1 font-semibold">Export to spreadsheet or restore anytime.</p>
+
+        <div class="mt-4 space-y-2">
+          <button type="button" onclick="exportToCSV()" class="clay-btn clay-btn-dark w-full py-2.5 rounded-xl text-xs font-black flex items-center justify-center gap-1.5">
+            📊 Export CSV (Excel)
+          </button>
+          <button type="button" onclick="downloadBackupJSON()" class="clay-btn clay-btn-light w-full py-2 rounded-xl text-xs font-black">
+            💾 Download JSON Backup
+          </button>
+          
+          <label class="clay-btn clay-btn-light w-full py-2 rounded-xl text-xs font-black cursor-pointer block text-center">
+            📥 Restore from JSON
+            <input type="file" id="jsonFileInput" accept=".json" onchange="importBackupJSON(event)" class="hidden" />
+          </label>
+        </div>
+
+        <button type="button" onclick="closeBackupModal()" class="mt-3 text-xs text-slate-400 hover:text-slate-700 font-bold">
+          Dismiss
+        </button>
+      </div>
+    </div>
+
+    <!-- MODAL 5: CUSTOM CONFIRMATION DIALOG -->
+    <div id="confirmDialog" onclick="if(event.target === this) dismissConfirmDialog()" class="fixed inset-0 z-50 clay-backdrop flex items-center justify-center p-4 hidden">
+      <div class="clay-card w-full max-w-xs rounded-[28px] p-5 shadow-2xl">
+        <h4 id="confirmDialogTitle" class="text-sm font-black text-slate-900">Confirm Action</h4>
+        <p id="confirmDialogMessage" class="text-xs text-slate-600 mt-1.5 leading-relaxed font-semibold">Are you sure?</p>
+
+        <div class="mt-4 flex gap-2 justify-end">
+          <button type="button" onclick="dismissConfirmDialog()" class="clay-btn clay-btn-light px-3.5 py-2 text-xs font-bold rounded-xl">
+            Cancel
+          </button>
+          <button type="button" id="confirmDialogBtn" class="clay-btn bg-rose-600 text-white px-4 py-2 text-xs font-black rounded-xl shadow-md">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toastNotification" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 clay-card-sm text-slate-900 text-xs font-black px-4 py-2.5 rounded-full shadow-2xl flex items-center gap-2 border border-white/80 transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-4">
+      <span class="w-2 h-2 rounded-full bg-emerald-500 sos-dot"></span>
+      <span id="toastText">Action completed</span>
+    </div>
+
+  </div>
+
+  <script>
+    const STORAGE_KEY_STUDENTS = 'tuition_softclay_students_v5';
+    const STORAGE_KEY_PAYMENTS = 'tuition_softclay_payments_v5';
+    const STORAGE_KEY_AUDIO = 'tuition_softclay_audio_v5';
+
+    const MONTHS_LIST = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    // State Variables - Clean slate (No default students)
+    let students = [];
+    let payments = [];
+    let selectedMonth = '';
+    let currentActiveTab = 'fees';
+    let currentFeeFilter = 'all'; // 'all' | 'unpaid' | 'paid'
+    let selectedStudentForDetail = null;
+    let lastGeneratedReceipt = null;
+
+    // Web Audio Tactile Sound Effects
+    let audioContext = null;
+    let audioEnabled = localStorage.getItem(STORAGE_KEY_AUDIO) !== 'false';
+
+    function initAudio() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playTactileSound(type = 'pop') {
+      if (!audioEnabled) return;
+      try {
+        initAudio();
+        if (audioContext.state === 'suspended') {
+          audioContext.resume();
+        }
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+
+        const now = audioContext.currentTime;
+
+        if (type === 'pop') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(340, now);
+          osc.frequency.exponentialRampToValueAtTime(120, now + 0.07);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.07);
+          osc.start(now);
+          osc.stop(now + 0.07);
+        } else if (type === 'paid') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(480, now);
+          osc.frequency.exponentialRampToValueAtTime(960, now + 0.12);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
+          osc.start(now);
+          osc.stop(now + 0.12);
+        }
+      } catch (e) {
+        // Silently ignore if audio context is blocked
+      }
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      localStorage.setItem(STORAGE_KEY_AUDIO, audioEnabled);
+      const btn = document.getElementById('btnAudioToggle');
+      if (btn) btn.textContent = audioEnabled ? '🔊' : '🔇';
+      showToast(audioEnabled ? 'Sound enabled' : 'Sound muted');
+      if (audioEnabled) playTactileSound('paid');
+    }
+
+    // Normalizing month string to handle variants
+    function normalizeMonth(mStr) {
+      if (!mStr) return '';
+      const clean = mStr.trim().toLowerCase();
+      for (const full of MONTHS_LIST) {
+        const fullLower = full.toLowerCase();
+        const shortLower = fullLower.slice(0, 3);
+        if (clean.includes(fullLower) || clean.includes(shortLower)) {
+          const matchYear = clean.match(/\d{4}/);
+          if (matchYear) {
+            return `${full} ${matchYear[0]}`;
+          }
+        }
+      }
+      return mStr.trim();
+    }
+
+    function initClockAndCalendar() {
+      function updateLiveTime() {
+        const now = new Date();
+        const timeEl = document.getElementById('liveTime');
+        const dateEl = document.getElementById('liveDate');
+        if (timeEl) {
+          timeEl.textContent = now.toLocaleTimeString('en-IN', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+        if (dateEl) {
+          dateEl.textContent = now.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+        }
+      }
+      updateLiveTime();
+      setInterval(updateLiveTime, 1000);
+    }
+
+    function generateMonthOptions() {
+      const select = document.getElementById('selectedMonthSelect');
+      const pMonthSelect = document.getElementById('pMonthSelect');
+      select.innerHTML = '';
+      pMonthSelect.innerHTML = '';
+
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonthIndex = now.getMonth();
+      const defaultCurrentMonth = `${MONTHS_LIST[currentMonthIndex]} ${currentYear}`;
+
+      const options = [];
+      [currentYear - 1, currentYear, currentYear + 1].forEach(yr => {
+        MONTHS_LIST.forEach(m => {
+          options.push(`${m} ${yr}`);
+        });
+      });
+
+      options.forEach(opt => {
+        const o1 = document.createElement('option');
+        o1.value = opt;
+        o1.textContent = opt;
+        select.appendChild(o1);
+
+        const o2 = document.createElement('option');
+        o2.value = opt;
+        o2.textContent = opt;
+        pMonthSelect.appendChild(o2);
+      });
+
+      selectedMonth = defaultCurrentMonth;
+      select.value = selectedMonth;
+      pMonthSelect.value = selectedMonth;
+    }
+
+    function shiftMonth(offset) {
+      playTactileSound('pop');
+      const select = document.getElementById('selectedMonthSelect');
+      let idx = select.selectedIndex + offset;
+      if (idx >= 0 && idx < select.options.length) {
+        select.selectedIndex = idx;
+        handleMonthChange(select.value);
+      }
+    }
+
+    function handleMonthChange(newMonth) {
+      selectedMonth = newMonth;
+      document.getElementById('pMonthSelect').value = newMonth;
+      renderAll();
+    }
+
+    function loadData() {
+      try {
+        const storedStudents = localStorage.getItem(STORAGE_KEY_STUDENTS);
+        const storedPayments = localStorage.getItem(STORAGE_KEY_PAYMENTS);
+
+        students = storedStudents ? JSON.parse(storedStudents) : [];
+        payments = storedPayments ? JSON.parse(storedPayments) : [];
+      } catch (e) {
+        students = [];
+        payments = [];
+      }
+    }
+
+    function persistData() {
+      try {
+        localStorage.setItem(STORAGE_KEY_STUDENTS, JSON.stringify(students));
+        localStorage.setItem(STORAGE_KEY_PAYMENTS, JSON.stringify(payments));
+      } catch (e) {
+        console.error('Storage save error:', e);
+      }
+    }
+
+    // Fee Status Calculation Logic
+    function getStudentMonthStatus(studentId, targetMonth) {
+      const student = students.find(s => s.id === studentId);
+      if (!student) return { status: 'Unpaid', paidAmount: 0, remaining: 0, payments: [] };
+
+      const normTarget = normalizeMonth(targetMonth);
+      const monthlyFee = Number(student.monthlyFee) || 0;
+      
+      const studentPayments = payments.filter(p => {
+        return p.studentId === studentId && normalizeMonth(p.month) === normTarget;
+      });
+
+      const paidAmount = studentPayments.reduce((acc, p) => acc + (Number(p.amount) || 0), 0);
+      const remaining = Math.max(0, monthlyFee - paidAmount);
+
+      let status = 'Unpaid';
+      if (paidAmount >= monthlyFee && monthlyFee > 0) {
+        status = 'Paid';
+      } else if (paidAmount > 0) {
+        status = 'Partial';
+      }
+
+      return { status, paidAmount, remaining, monthlyFee, payments: studentPayments };
+    }
+
+    function renderFeesView() {
+      const container = document.getElementById('feeCardsList');
+      const activeDisplay = document.getElementById('activeMonthDisplay');
+      if (activeDisplay) activeDisplay.textContent = selectedMonth;
+
+      let totalCollected = 0;
+      let totalPending = 0;
+      let paidCount = 0;
+      let unpaidCount = 0;
+
+      const cardData = students.map(student => {
+        const info = getStudentMonthStatus(student.id, selectedMonth);
+        totalCollected += info.paidAmount;
+        totalPending += info.remaining;
+
+        if (info.status === 'Paid') paidCount++;
+        else unpaidCount++;
+
+        return { student, info };
+      });
+
+      // Update Header Metrics
+      document.getElementById('statTotalStudents').textContent = students.length;
+      document.getElementById('statCollected').textContent = `₹${totalCollected.toLocaleString('en-IN')}`;
+      document.getElementById('statPending').textContent = `₹${totalPending.toLocaleString('en-IN')}`;
+      document.getElementById('countAll').textContent = students.length;
+      document.getElementById('countUnpaid').textContent = unpaidCount;
+      document.getElementById('countPaid').textContent = paidCount;
+
+      // Filter cards
+      let filtered = cardData;
+      if (currentFeeFilter === 'unpaid') {
+        filtered = cardData.filter(d => d.info.status !== 'Paid');
+      } else if (currentFeeFilter === 'paid') {
+        filtered = cardData.filter(d => d.info.status === 'Paid');
+      }
+
+      document.getElementById('filterSummaryText').textContent = `${filtered.length} students showing`;
+
+      if (students.length === 0) {
+        container.innerHTML = `
+          <div class="clay-card p-8 text-center">
+            <div class="w-12 h-12 rounded-2xl clay-card-sm mx-auto mb-3 flex items-center justify-center text-indigo-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+            </div>
+            <p class="text-sm font-black text-slate-800">No students registered yet</p>
+            <p class="text-xs font-bold text-slate-400 mt-1">Register your first student to begin tracking monthly fees</p>
+            <button type="button" onclick="openAddStudentModal()" class="clay-btn clay-btn-dark mt-4 px-4 py-2.5 text-xs font-black rounded-xl">
+              + Register First Student
+            </button>
+          </div>
+        `;
+      } else if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="clay-card p-6 text-center">
+            <svg class="w-7 h-7 text-emerald-500 mx-auto mb-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p class="text-xs font-black text-slate-800">No students under this filter</p>
+            <p class="text-[11px] font-bold text-slate-400 mt-0.5">All fees in order for ${selectedMonth}</p>
+          </div>
+        `;
+      } else {
+        container.innerHTML = filtered.map(({ student, info }) => {
+          const isPaid = info.status === 'Paid';
+          const isPartial = info.status === 'Partial';
+
+          let badgeHtml = '';
+          if (isPaid) {
+            badgeHtml = `
+              <div class="badge-paid px-2.5 py-1 rounded-full text-[10px] font-black flex items-center gap-1.5">
+                <svg class="w-3 h-3 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                <span>FEE PAID</span>
+              </div>
+            `;
+          } else if (isPartial) {
+            badgeHtml = `
+              <div class="badge-partial px-2.5 py-1 rounded-full text-[10px] font-black flex items-center gap-1">
+                <span>PARTIAL • ₹${info.remaining} DUE</span>
+              </div>
+            `;
+          } else {
+            badgeHtml = `
+              <div class="badge-unpaid px-2.5 py-1 rounded-full text-[10px] font-black flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-white sos-dot"></span>
+                <span>NOT PAID • UNPAID</span>
+              </div>
+            `;
+          }
+
+          return `
+            <div class="clay-card p-3.5 flex flex-col justify-between">
+              <div class="flex items-start justify-between">
+                <div class="cursor-pointer" onclick="openStudentDetail('${student.id}')">
+                  <h3 class="font-black text-slate-900 text-sm tracking-tight hover:text-indigo-600 flex items-center gap-1.5">
+                    <span>${student.name}</span>
+                  </h3>
+                  <div class="text-[11px] text-slate-500 font-bold mt-0.5 flex items-center gap-1.5">
+                    <span>${student.className}</span>
+                    <span>•</span>
+                    <span class="font-mono text-slate-800 font-black">₹${student.monthlyFee}/mo</span>
+                  </div>
+                </div>
+
+                <div>
+                  ${badgeHtml}
+                </div>
+              </div>
+
+              <!-- Card Action Row -->
+              <div class="mt-3 pt-2.5 border-t border-slate-200/50 flex items-center justify-between">
+                <div class="text-xs">
+                  ${isPaid 
+                    ? `<span class="font-black text-emerald-600 font-mono">₹${info.paidAmount} received</span>` 
+                    : `<span class="font-black text-rose-600 font-mono">₹${info.remaining} Pending</span>`
+                  }
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="openPaymentModal('${student.id}', '${selectedMonth}')" class="clay-btn ${isPaid ? 'clay-btn-light text-slate-700' : 'clay-btn-dark'} text-xs font-black px-3 py-1.5 rounded-xl flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                    <span>${isPaid ? 'Add More' : 'Mark as Paid'}</span>
+                  </button>
+                  <button type="button" onclick="openStudentDetail('${student.id}')" class="clay-btn clay-btn-light p-1.5 rounded-xl text-slate-500" title="Profile">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      renderRecentPaymentsForMonth();
+    }
+
+    function renderRecentPaymentsForMonth() {
+      const container = document.getElementById('recentPaymentsList');
+      const countEl = document.getElementById('recentPaymentsCount');
+      const normSelected = normalizeMonth(selectedMonth);
+
+      const monthPayments = payments
+        .filter(p => normalizeMonth(p.month) === normSelected)
+        .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+      if (countEl) countEl.textContent = `${monthPayments.length} entries`;
+
+      if (monthPayments.length === 0) {
+        container.innerHTML = `
+          <div class="clay-card-sm p-4 text-center text-xs text-slate-400 font-bold">
+            No payments recorded yet for ${selectedMonth}
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = monthPayments.map(p => `
+        <div class="clay-card-sm p-3 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-black text-slate-900">${p.studentName}</div>
+            <div class="text-[11px] text-slate-500 font-bold mt-0.5 flex items-center gap-1.5 font-mono">
+              <span class="text-slate-800 clay-card-sm px-1.5 py-0.2 rounded font-sans text-[10px] font-black">${p.paymentMethod}</span>
+              <span>•</span>
+              <span>${p.paymentDate}</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-1.5">
+            <span class="text-xs font-mono font-black text-emerald-600 clay-card-sm px-2.5 py-1">
+              ₹${Number(p.amount).toLocaleString('en-IN')}
+            </span>
+            <button type="button" onclick="generateReceipt('${p.id}')" class="clay-btn clay-btn-light p-1.5 rounded-lg text-indigo-600" title="Receipt">
+              🧾
+            </button>
+            <button type="button" onclick="editPayment('${p.id}')" class="clay-btn clay-btn-light p-1.5 rounded-lg text-slate-500" title="Edit">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
+            </button>
+            <button type="button" onclick="confirmDeletePayment('${p.id}')" class="clay-btn clay-btn-light p-1.5 rounded-lg text-rose-600" title="Delete">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderStudentsRoster(filterQuery = '') {
+      const container = document.getElementById('studentsRosterList');
+      const query = filterQuery.trim().toLowerCase();
+
+      const filtered = students.filter(s => 
+        s.name.toLowerCase().includes(query) || 
+        s.className.toLowerCase().includes(query)
+      );
+
+      if (students.length === 0) {
+        container.innerHTML = `
+          <div class="clay-card p-8 text-center">
+            <p class="text-xs font-black text-slate-600">No students registered yet</p>
+            <button type="button" onclick="openAddStudentModal()" class="clay-btn clay-btn-dark mt-3 px-4 py-2 text-xs font-black rounded-xl">
+              + Register Student
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="clay-card p-6 text-center">
+            <p class="text-xs font-black text-slate-500">No student matches "${filterQuery}"</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(s => {
+        const info = getStudentMonthStatus(s.id, selectedMonth);
+        const isPaid = info.status === 'Paid';
+
+        return `
+          <div onclick="openStudentDetail('${s.id}')" class="clay-card p-3.5 flex items-center justify-between cursor-pointer">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl clay-card-sm text-indigo-700 font-black text-xs flex items-center justify-center">
+                ${s.name.charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <h4 class="font-black text-slate-900 text-xs tracking-tight">${s.name}</h4>
+                <p class="text-[11px] text-slate-500 font-bold">${s.className} • <span class="font-mono text-slate-800">₹${s.monthlyFee}/mo</span></p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              ${isPaid 
+                ? `<span class="badge-paid text-[10px] font-black px-2 py-0.5 rounded-full">PAID</span>`
+                : `<span class="badge-unpaid text-[10px] font-black px-2 py-0.5 rounded-full">PENDING</span>`
+              }
+              <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openStudentDetail(studentId) {
+      playTactileSound('pop');
+      selectedStudentForDetail = students.find(s => s.id === studentId);
+      if (!selectedStudentForDetail) return;
+
+      const st = selectedStudentForDetail;
+      const info = getStudentMonthStatus(st.id, selectedMonth);
+
+      const detailCard = document.getElementById('detailStudentCard');
+      detailCard.innerHTML = `
+        <div class="flex items-start justify-between">
+          <div>
+            <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Student Profile</span>
+            <h2 class="text-base font-black text-slate-900 tracking-tight">${st.name}</h2>
+            <p class="text-xs text-slate-500 font-bold mt-0.5">${st.className}</p>
+          </div>
+          <div class="text-right">
+            <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Rate</span>
+            <p class="text-base font-black text-slate-900 font-mono">₹${st.monthlyFee}/mo</p>
+          </div>
+        </div>
+
+        <div class="pt-2.5 border-t border-slate-200/50 flex items-center justify-between">
+          <div>
+            <span class="text-xs font-bold text-slate-600">${selectedMonth} Status:</span>
+          </div>
+          <div>
+            ${info.status === 'Paid'
+              ? `<span class="badge-paid text-xs font-black px-3 py-1 rounded-full">FEE PAID (₹${info.paidAmount})</span>`
+              : `<span class="badge-unpaid text-xs font-black px-3 py-1 rounded-full">UNPAID • ₹${info.remaining} DUE</span>`
+            }
+          </div>
+        </div>
+
+        <div class="pt-2.5 border-t border-slate-200/50 flex gap-2">
+          <button type="button" onclick="openPaymentModal('${st.id}', '${selectedMonth}')" class="clay-btn clay-btn-dark flex-1 py-2.5 rounded-xl font-black text-xs flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+            Record Payment
+          </button>
+          <button type="button" onclick="confirmDeleteStudent('${st.id}')" class="clay-btn clay-btn-light px-3 py-2.5 text-rose-600 rounded-xl font-black text-xs" title="Remove Student">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
+          </button>
+        </div>
+      `;
+
+      // Student chronological payment history
+      const studentHistory = payments
+        .filter(p => p.studentId === st.id)
+        .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+      const historyContainer = document.getElementById('detailPaymentHistoryList');
+      if (studentHistory.length === 0) {
+        historyContainer.innerHTML = `
+          <div class="clay-card-sm p-4 text-center text-xs text-slate-400 font-bold">
+            No payments recorded yet for ${st.name}
+          </div>
+        `;
+      } else {
+        historyContainer.innerHTML = studentHistory.map(p => `
+          <div class="clay-card-sm p-3 flex items-center justify-between">
+            <div>
+              <div class="text-xs font-black text-slate-900 flex items-center gap-2">
+                <span class="clay-card-sm text-indigo-700 font-mono px-2 py-0.5 text-[10px] font-black">${p.month}</span>
+                <span class="text-slate-500 font-bold text-[11px]">${p.paymentDate}</span>
+              </div>
+              <div class="text-[11px] text-slate-600 font-bold mt-1">
+                Method: <span class="text-slate-900">${p.paymentMethod}</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-1.5">
+              <span class="text-xs font-mono font-black text-emerald-600 clay-card-sm px-2 py-1">
+                ₹${Number(p.amount).toLocaleString('en-IN')}
+              </span>
+              <button type="button" onclick="generateReceipt('${p.id}')" class="clay-btn clay-btn-light p-1.5 text-indigo-600 rounded-lg">
+                🧾
+              </button>
+              <button type="button" onclick="editPayment('${p.id}')" class="clay-btn clay-btn-light p-1.5 text-slate-500 rounded-lg">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
+              </button>
+              <button type="button" onclick="confirmDeletePayment('${p.id}')" class="clay-btn clay-btn-light p-1.5 text-rose-600 rounded-lg">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      document.getElementById('viewFees').classList.add('hidden');
+      document.getElementById('viewStudents').classList.add('hidden');
+      document.getElementById('viewHistory').classList.add('hidden');
+      document.getElementById('viewStudentDetail').classList.remove('hidden');
+    }
+
+    function closeStudentDetail() {
+      playTactileSound('pop');
+      document.getElementById('viewStudentDetail').classList.add('hidden');
+      switchTab(currentActiveTab);
+    }
+
+    function renderFullLedger() {
+      const container = document.getElementById('allPaymentsLedger');
+      const countEl = document.getElementById('allPaymentsCount');
+      if (countEl) countEl.textContent = `${payments.length} entries`;
+
+      if (payments.length === 0) {
+        container.innerHTML = `
+          <div class="clay-card p-6 text-center text-xs text-slate-400 font-bold">
+            No payments recorded yet. Tap "+ Payment" to start.
+          </div>
+        `;
+        return;
+      }
+
+      const sorted = [...payments].sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+      container.innerHTML = sorted.map(p => `
+        <div class="clay-card-sm p-3 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-black text-slate-900 flex items-center gap-2">
+              <span>${p.studentName}</span>
+              <span class="clay-card-sm text-indigo-700 text-[10px] font-mono font-black px-2 py-0.2 rounded">${p.month}</span>
+            </div>
+            <div class="text-[11px] text-slate-500 font-bold mt-0.5 font-mono">
+              ${p.paymentDate} • ${p.paymentMethod}
+            </div>
+          </div>
+
+          <div class="flex items-center gap-1.5">
+            <span class="text-xs font-mono font-black text-emerald-600 clay-card-sm px-2.5 py-1">
+              ₹${Number(p.amount).toLocaleString('en-IN')}
+            </span>
+            <button type="button" onclick="generateReceipt('${p.id}')" class="clay-btn clay-btn-light p-1.5 text-indigo-600 rounded-lg">
+              🧾
+            </button>
+            <button type="button" onclick="editPayment('${p.id}')" class="clay-btn clay-btn-light p-1.5 text-slate-500 rounded-lg">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
+            </button>
+            <button type="button" onclick="confirmDeletePayment('${p.id}')" class="clay-btn clay-btn-light p-1.5 text-rose-600 rounded-lg">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function populatePaymentStudentDropdown(selectedId = '') {
+      const select = document.getElementById('pStudentSelect');
+      select.innerHTML = '<option value="">-- Choose Student --</option>';
+      students.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.id;
+        opt.textContent = `${s.name} (${s.className} • ₹${s.monthlyFee}/mo)`;
+        if (s.id === selectedId) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    function openPaymentModal(prefillStudentId = '', prefillMonth = '') {
+      playTactileSound('pop');
+
+      if (students.length === 0) {
+        showToast('Please register a student first');
+        openAddStudentModal();
+        return;
+      }
+
+      document.getElementById('editPaymentId').value = '';
+      document.getElementById('paymentModalTitle').textContent = 'Record Fee Payment';
+      document.getElementById('btnSavePaymentText').textContent = 'Save Payment';
+
+      const targetStudent = students.find(s => s.id === prefillStudentId) || students[0];
+      const targetMonth = prefillMonth || selectedMonth;
+
+      populatePaymentStudentDropdown(targetStudent ? targetStudent.id : '');
+
+      // Auto default to today's date
+      const todayISO = new Date().toISOString().split('T')[0];
+      document.getElementById('pDateInput').value = todayISO;
+      document.getElementById('pMethodSelect').value = 'Cash';
+
+      // Auto balance calculation
+      let amountToPreload = targetStudent ? targetStudent.monthlyFee : '';
+      if (targetStudent) {
+        const info = getStudentMonthStatus(targetStudent.id, targetMonth);
+        if (info.remaining > 0) {
+          amountToPreload = info.remaining;
+        }
+      }
+      document.getElementById('pAmountInput').value = amountToPreload;
+
+      toggleCustomMonthInput(false);
+      document.getElementById('pMonthSelect').value = targetMonth;
+      document.getElementById('pCustomMonthInput').value = '';
+
+      document.getElementById('paymentModal').classList.remove('hidden');
+    }
+
+    function editPayment(paymentId) {
+      playTactileSound('pop');
+      const payment = payments.find(p => p.id === paymentId);
+      if (!payment) return;
+
+      document.getElementById('editPaymentId').value = payment.id;
+      document.getElementById('paymentModalTitle').textContent = 'Edit Payment Record';
+      document.getElementById('btnSavePaymentText').textContent = 'Update Payment';
+
+      populatePaymentStudentDropdown(payment.studentId);
+      document.getElementById('pAmountInput').value = payment.amount;
+      document.getElementById('pDateInput').value = payment.paymentDate;
+      document.getElementById('pMethodSelect').value = payment.paymentMethod;
+
+      const select = document.getElementById('pMonthSelect');
+      let foundInDropdown = false;
+      for (let i = 0; i < select.options.length; i++) {
+        if (select.options[i].value === payment.month) {
+          select.selectedIndex = i;
+          foundInDropdown = true;
+          break;
+        }
+      }
+
+      if (foundInDropdown) {
+        toggleCustomMonthInput(false);
+      } else {
+        toggleCustomMonthInput(true);
+        document.getElementById('pCustomMonthInput').value = payment.month;
+      }
+
+      document.getElementById('paymentModal').classList.remove('hidden');
+    }
+
+    function closePaymentModal() {
+      playTactileSound('pop');
+      document.getElementById('paymentModal').classList.add('hidden');
+    }
+
+    function toggleCustomMonthInput(isCustom) {
+      playTactileSound('pop');
+      const standardBox = document.getElementById('standardMonthContainer');
+      const customBox = document.getElementById('customMonthContainer');
+      if (isCustom) {
+        standardBox.classList.add('hidden');
+        customBox.classList.remove('hidden');
+        document.getElementById('pCustomMonthInput').focus();
+      } else {
+        standardBox.classList.remove('hidden');
+        customBox.classList.add('hidden');
+      }
+    }
+
+    function setQuickPaymentMonth(type) {
+      playTactileSound('pop');
+      toggleCustomMonthInput(false);
+      const select = document.getElementById('pMonthSelect');
+      const now = new Date();
+      const yr = now.getFullYear();
+      const mIdx = now.getMonth();
+
+      if (type === 'current') {
+        select.value = `${MONTHS_LIST[mIdx]} ${yr}`;
+      } else if (type === 'last') {
+        const lastIdx = mIdx === 0 ? 11 : mIdx - 1;
+        const lastYr = mIdx === 0 ? yr - 1 : yr;
+        select.value = `${MONTHS_LIST[lastIdx]} ${lastYr}`;
+      }
+
+      const studentId = document.getElementById('pStudentSelect').value;
+      if (studentId) onStudentSelectForPayment(studentId);
+    }
+
+    function onStudentSelectForPayment(studentId) {
+      const student = students.find(s => s.id === studentId);
+      if (!student) return;
+
+      const isCustomVisible = !document.getElementById('customMonthContainer').classList.contains('hidden');
+      const currentMonthVal = isCustomVisible 
+        ? document.getElementById('pCustomMonthInput').value.trim() 
+        : document.getElementById('pMonthSelect').value;
+
+      const info = getStudentMonthStatus(student.id, currentMonthVal || selectedMonth);
+      document.getElementById('pAmountInput').value = info.remaining > 0 ? info.remaining : student.monthlyFee;
+    }
+
+    function handlePaymentSubmit(e) {
+      e.preventDefault();
+      const studentId = document.getElementById('pStudentSelect').value;
+      const amount = Number(document.getElementById('pAmountInput').value);
+      const paymentDate = document.getElementById('pDateInput').value;
+      const paymentMethod = document.getElementById('pMethodSelect').value;
+      const editId = document.getElementById('editPaymentId').value;
+
+      const isCustomVisible = !document.getElementById('customMonthContainer').classList.contains('hidden');
+      let rawMonth = isCustomVisible 
+        ? document.getElementById('pCustomMonthInput').value.trim() 
+        : document.getElementById('pMonthSelect').value;
+
+      const effectiveMonth = normalizeMonth(rawMonth);
+
+      if (!studentId) {
+        showToast('Please pick a student');
+        return;
+      }
+      if (!effectiveMonth) {
+        showToast('Specify which month this payment is for');
+        return;
+      }
+      if (!amount || amount <= 0) {
+        showToast('Enter a valid amount');
+        return;
+      }
+
+      const student = students.find(s => s.id === studentId);
+      const studentName = student ? student.name : 'Unknown';
+
+      if (editId) {
+        const idx = payments.findIndex(p => p.id === editId);
+        if (idx !== -1) {
+          payments[idx] = {
+            ...payments[idx],
+            studentId,
+            studentName,
+            amount,
+            month: effectiveMonth,
+            paymentDate,
+            paymentMethod
+          };
+          playTactileSound('paid');
+          showToast(`Updated payment of ₹${amount} for ${studentName}`);
+        }
+      } else {
+        const newRecord = {
+          id: 'pay_' + Date.now(),
+          studentId,
+          studentName,
+          amount,
+          month: effectiveMonth,
+          paymentDate,
+          paymentMethod,
+          createdAt: Date.now()
+        };
+        payments.unshift(newRecord);
+        playTactileSound('paid');
+        showToast(`Saved ₹${amount} for ${studentName} (${effectiveMonth})`);
+      }
+
+      persistData();
+      closePaymentModal();
+      renderAll();
+
+      if (selectedStudentForDetail && selectedStudentForDetail.id === studentId) {
+        openStudentDetail(studentId);
+      }
+    }
+
+    function openAddStudentModal() {
+      playTactileSound('pop');
+      document.getElementById('addStudentForm').reset();
+      document.getElementById('addStudentModal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('sNameInput').focus(), 100);
+    }
+
+    function closeAddStudentModal() {
+      playTactileSound('pop');
+      document.getElementById('addStudentModal').classList.add('hidden');
+    }
+
+    function handleAddStudentSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('sNameInput').value.trim();
+      const className = document.getElementById('sClassInput').value.trim();
+      const monthlyFee = Number(document.getElementById('sFeeInput').value);
+
+      if (!name || !className || !monthlyFee || monthlyFee <= 0) {
+        showToast('Please fill all fields');
+        return;
+      }
+
+      const newStudent = {
+        id: 'st_' + Date.now(),
+        name,
+        className,
+        monthlyFee,
+        createdAt: Date.now()
+      };
+
+      students.unshift(newStudent);
+      persistData();
+      closeAddStudentModal();
+      playTactileSound('paid');
+      showToast(`Registered: ${name}`);
+      renderAll();
+    }
+
+    function confirmDeletePayment(paymentId) {
+      playTactileSound('pop');
+      const p = payments.find(pay => pay.id === paymentId);
+      if (!p) return;
+
+      document.getElementById('confirmDialogTitle').textContent = 'Delete Payment?';
+      document.getElementById('confirmDialogMessage').textContent = `Delete ₹${p.amount} received from ${p.studentName} for ${p.month}?`;
+      
+      const confirmBtn = document.getElementById('confirmDialogBtn');
+      confirmBtn.onclick = () => {
+        payments = payments.filter(pay => pay.id !== paymentId);
+        persistData();
+        dismissConfirmDialog();
+        showToast('Payment record removed');
+        renderAll();
+        if (selectedStudentForDetail) {
+          openStudentDetail(selectedStudentForDetail.id);
+        }
+      };
+
+      document.getElementById('confirmDialog').classList.remove('hidden');
+    }
+
+    function confirmDeleteStudent(studentId) {
+      playTactileSound('pop');
+      const st = students.find(s => s.id === studentId);
+      if (!st) return;
+
+      document.getElementById('confirmDialogTitle').textContent = 'Remove Student?';
+      document.getElementById('confirmDialogMessage').textContent = `Remove ${st.name} from the active register? Past payment history will remain recorded.`;
+
+      const confirmBtn = document.getElementById('confirmDialogBtn');
+      confirmBtn.onclick = () => {
+        students = students.filter(s => s.id !== studentId);
+        persistData();
+        dismissConfirmDialog();
+        closeStudentDetail();
+        showToast(`Removed: ${st.name}`);
+        renderAll();
+      };
+
+      document.getElementById('confirmDialog').classList.remove('hidden');
+    }
+
+    function dismissConfirmDialog() {
+      playTactileSound('pop');
+      document.getElementById('confirmDialog').classList.add('hidden');
+    }
+
+    function generateReceipt(paymentId) {
+      playTactileSound('pop');
+      const p = payments.find(item => item.id === paymentId);
+      if (!p) return;
+      const st = students.find(s => s.id === p.studentId);
+
+      lastGeneratedReceipt = {
+        studentName: p.studentName,
+        className: st ? st.className : 'Student',
+        month: p.month,
+        amount: p.amount,
+        date: p.paymentDate,
+        method: p.paymentMethod
+      };
+
+      document.getElementById('receiptDate').textContent = `Date: ${p.paymentDate}`;
+      document.getElementById('receiptStudentName').textContent = p.studentName;
+      document.getElementById('receiptClassName').textContent = st ? st.className : 'Student';
+      document.getElementById('receiptMonth').textContent = p.month;
+      document.getElementById('receiptMethod').textContent = p.paymentMethod;
+      document.getElementById('receiptAmount').textContent = `₹${Number(p.amount).toLocaleString('en-IN')}`;
+
+      document.getElementById('receiptModal').classList.remove('hidden');
+    }
+
+    function closeReceiptModal() {
+      playTactileSound('pop');
+      document.getElementById('receiptModal').classList.add('hidden');
+    }
+
+    function copyReceiptToClipboard() {
+      if (!lastGeneratedReceipt) return;
+      const r = lastGeneratedReceipt;
+      const receiptText = 
+`*TUITION FEE RECEIPT* 🧾
+--------------------------
+*Student:* ${r.studentName}
+*Class:* ${r.className}
+*Fee Month:* ${r.month}
+*Amount Paid:* ₹${r.amount}
+*Payment Date:* ${r.date}
+*Mode:* ${r.method}
+*Status:* PAID & CONFIRMED ✅
+--------------------------
+Thank you!`;
+
+      const tempTextArea = document.createElement('textarea');
+      tempTextArea.value = receiptText;
+      document.body.appendChild(tempTextArea);
+      tempTextArea.select();
+      try {
+        document.execCommand('copy');
+        playTactileSound('paid');
+        showToast('Receipt copied! Paste in WhatsApp.');
+      } catch (err) {
+        showToast('Could not auto-copy.');
+      }
+      document.body.removeChild(tempTextArea);
+    }
+
+    function switchTab(tab) {
+      playTactileSound('pop');
+      currentActiveTab = tab;
+      document.getElementById('viewStudentDetail').classList.add('hidden');
+
+      const viewFees = document.getElementById('viewFees');
+      const viewStudents = document.getElementById('viewStudents');
+      const viewHistory = document.getElementById('viewHistory');
+
+      const btnFees = document.getElementById('tabFeesBtn');
+      const btnStudents = document.getElementById('tabStudentsBtn');
+      const btnHistory = document.getElementById('tabHistoryBtn');
+
+      [btnFees, btnStudents, btnHistory].forEach(btn => {
+        btn.classList.remove('text-slate-900', 'font-black');
+        btn.classList.add('text-slate-400', 'font-bold');
+      });
+
+      if (tab === 'fees') {
+        viewFees.classList.remove('hidden');
+        viewStudents.classList.add('hidden');
+        viewHistory.classList.add('hidden');
+        btnFees.classList.add('text-slate-900', 'font-black');
+        btnFees.classList.remove('text-slate-400');
+        renderFeesView();
+      } else if (tab === 'students') {
+        viewFees.classList.add('hidden');
+        viewStudents.classList.remove('hidden');
+        viewHistory.classList.add('hidden');
+        btnStudents.classList.add('text-slate-900', 'font-black');
+        btnStudents.classList.remove('text-slate-400');
+        renderStudentsRoster();
+      } else if (tab === 'history') {
+        viewFees.classList.add('hidden');
+        viewStudents.classList.add('hidden');
+        viewHistory.classList.remove('hidden');
+        btnHistory.classList.add('text-slate-900', 'font-black');
+        btnHistory.classList.remove('text-slate-400');
+        renderFullLedger();
+      }
+    }
+
+    function setFeeFilter(filter) {
+      playTactileSound('pop');
+      currentFeeFilter = filter;
+      const bAll = document.getElementById('btnFilterAll');
+      const bUnpaid = document.getElementById('btnFilterUnpaid');
+      const bPaid = document.getElementById('btnFilterPaid');
+
+      [bAll, bUnpaid, bPaid].forEach(b => {
+        b.classList.remove('bg-slate-900', 'text-white', 'shadow-sm');
+        b.classList.add('text-slate-600');
+      });
+
+      if (filter === 'all') {
+        bAll.classList.add('bg-slate-900', 'text-white', 'shadow-sm');
+      } else if (filter === 'unpaid') {
+        bUnpaid.classList.add('bg-slate-900', 'text-white', 'shadow-sm');
+      } else if (filter === 'paid') {
+        bPaid.classList.add('bg-slate-900', 'text-white', 'shadow-sm');
+      }
+      renderFeesView();
+    }
+
+    function handleStudentSearch(val) {
+      renderStudentsRoster(val);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      const text = document.getElementById('toastText');
+      text.textContent = msg;
+      toast.classList.remove('opacity-0', '-translate-y-4', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', '-translate-y-4', 'pointer-events-none');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 2400);
+    }
+
+    function openBackupModal() {
+      playTactileSound('pop');
+      document.getElementById('backupModal').classList.remove('hidden');
+    }
+    function closeBackupModal() {
+      playTactileSound('pop');
+      document.getElementById('backupModal').classList.add('hidden');
+    }
+
+    function exportToCSV() {
+      const rows = [
+        ['Student Name', 'Class', 'Fee Month', 'Amount (INR)', 'Payment Date', 'Payment Method']
+      ];
+      payments.forEach(p => {
+        const st = students.find(s => s.id === p.studentId);
+        rows.push([
+          `"${p.studentName}"`,
+          `"${st ? st.className : ''}"`,
+          `"${p.month}"`,
+          String(p.amount),
+          `"${p.paymentDate}"`,
+          `"${p.paymentMethod}"`
+        ]);
+      });
+
+      const csvContent = 'data:text/csv;charset=utf-8,' + rows.map(e => e.join(',')).join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', `Tuition_Fee_Register_${Date.now()}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('Exported to CSV');
+      closeBackupModal();
+    }
+
+    function downloadBackupJSON() {
+      const data = {
+        students,
+        payments,
+        exportedAt: new Date().toISOString()
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Tuition_CRM_Backup_${Date.now()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('JSON Backup downloaded');
+      closeBackupModal();
+    }
+
+    function importBackupJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (Array.isArray(parsed.students) && Array.isArray(parsed.payments)) {
+            students = parsed.students;
+            payments = parsed.payments;
+            persistData();
+            renderAll();
+            showToast('Backup restored successfully!');
+            closeBackupModal();
+          } else {
+            showToast('Invalid backup file format');
+          }
+        } catch (err) {
+          showToast('Could not parse JSON file');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // Master Render Routine
+    function renderAll() {
+      renderFeesView();
+      renderStudentsRoster();
+      renderFullLedger();
+    }
+
+    // App Initialization
+    window.addEventListener('DOMContentLoaded', () => {
+      initClockAndCalendar();
+      generateMonthOptions();
+      loadData();
+      renderAll();
+    });
+  </script>
+</body>
+</html>
